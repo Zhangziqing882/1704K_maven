@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bawei.dao.ZwDao">
+	<!--列表查询SQL语句和模糊查询  -->
+	<select id="queryAll" resultType="Zw" parameterType="String">
+		select * from zw join type on zw.tid=type.tid
+		<where>
+			<if test="name!=null and name!=''">
+				and zw.name like concat('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+	<!-- 添加植物表 -->
+	<insert id="addZW" parameterType="Zw">
+		insert into zw values(DEFAULT,#{name},#{show},#{tid})
+	</insert>
+	<!-- 查询类型表 -->
+	<select id="selectAll" resultType="Type">
+		select * from type
+	</select>
+	<delete id="deleteZw">
+		delete from zw where id in
+		<foreach collection="array" item="ids" open="(" separator="," close=")">
+			#{ids}
+		</foreach>
+	</delete>
+	<select id="queryById" resultType="Zw">
+		select * from zw where id=#{id}
+	</select>
+	<update id="update" parameterType="Zw">
+		update zw set name=#{name},show=#{show},tid=#{tid} where id=#{id}
+	</update>
+</mapper>
